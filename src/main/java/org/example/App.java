@@ -32,6 +32,13 @@ public class App
         System.out.println("List of all Vehicles:");
         vehicleManager.displayAllVehicles();
 
-        System.out.println("Program exiting... Goodbye");
+       Vehicle v = vehicleManager.findVehicleById(105);
+        System.out.println("\nVehicle details from findVechicleById : " + v);
+        if(v != null)
+            System.out.println(v);
+        else
+            System.out.println("No vehicle with that id found");
+
+        System.out.println("\nProgram exiting... Goodbye");
     }
 }
