@@ -35,14 +35,14 @@ public class App
         vehicleManager.displayAllVehicles();
 
         Vehicle v = vehicleManager.findVehicleById(105);
-        System.out.println("\nVehicle details from findVechicleById : " + v);
+        System.out.println("\nVehicle details from findVechicleById : ");
         if(v != null)
             System.out.println(v);
         else
             System.out.println("No vehicle with that id found");
 
         ArrayList<Vehicle> vehiclesMatching = vehicleManager.findVehicleByMake("Ford");
-        System.out.println("\nVehicless that match make 'ford'");
+        System.out.println("\nVehicless that match make 'Ford' : ");
         for(Vehicle v1 : vehiclesMatching)
         {
             System.out.println(v1);
