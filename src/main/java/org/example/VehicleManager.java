@@ -70,4 +70,17 @@ public class VehicleManager {
         }
         return null;
     }
+
+    public ArrayList<Vehicle> findVehicleByMake(String make)
+    {
+        ArrayList<Vehicle> vehiclesMatching = new ArrayList<>();
+        for(Vehicle v : vehicleList)
+        {
+            if(v.getMake().equalsIgnoreCase(make))
+            {
+                vehiclesMatching.add(v);
+            }
+        }
+        return vehiclesMatching;
+    }
 }

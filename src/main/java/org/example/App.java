@@ -1,5 +1,7 @@
 package org.example;
 
+import java.util.ArrayList;
+
 /**
  * This Vehicle Bookings Management Systems manages the booking of Vehicles
  * by Passengers.
@@ -32,12 +34,19 @@ public class App
         System.out.println("List of all Vehicles:");
         vehicleManager.displayAllVehicles();
 
-       Vehicle v = vehicleManager.findVehicleById(105);
+        Vehicle v = vehicleManager.findVehicleById(105);
         System.out.println("\nVehicle details from findVechicleById : " + v);
         if(v != null)
             System.out.println(v);
         else
             System.out.println("No vehicle with that id found");
+
+        ArrayList<Vehicle> vehiclesMatching = vehicleManager.findVehicleByMake("Ford");
+        System.out.println("\nVehicless that match make 'ford'");
+        for(Vehicle v1 : vehiclesMatching)
+        {
+            System.out.println(v1);
+        }
 
         System.out.println("\nProgram exiting... Goodbye");
     }
