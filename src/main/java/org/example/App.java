@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * You should be able to see them in the project pane.
  * You will create "bookings.txt" at a later stage, to store booking records.
  *
- * "next-id-store.txt" contains one number ("201"), which will be the
+ * "next-id-store.txt" contains one number ("201"),     which will be the
  * next auto-generated id to be used to when new vehicles, passengers, or
  * bookings are created.  The value in the file will be updated when new objects
  * are created - but not when objects are recreated from records in
@@ -31,7 +31,7 @@ public class App
         passengerStore.displayAllPassengers();
 
         VehicleManager vehicleManager = new VehicleManager("vehicles.txt");
-        System.out.println("List of all Vehicles:");
+        System.out.println("\nList of all Vehicles:");
         vehicleManager.displayAllVehicles();
 
         Vehicle v = vehicleManager.findVehicleById(105);
@@ -42,8 +42,29 @@ public class App
             System.out.println("No vehicle with that id found");
 
         ArrayList<Vehicle> vehiclesMatching = vehicleManager.findVehicleByMake("Ford");
-        System.out.println("\nVehicless that match make 'Ford' : ");
+        System.out.println("\nVehicles that match make 'Ford' : ");
         for(Vehicle v1 : vehiclesMatching)
+        {
+            System.out.println(v1);
+        }
+
+        ArrayList<Vehicle> vehiclesRegistration = vehicleManager.findVehicleByRegistration("151D987105");
+        System.out.println("\n Vehicles that match registration number '151D987105' : ");
+        for(Vehicle v1 : vehiclesRegistration)
+        {
+            System.out.println(v1);
+        }
+
+        ArrayList<Vehicle> vehiclesType = vehicleManager.findVehicleByType("Van");
+        System.out.println("\nVehicles that match make 'Van'");
+        for(Vehicle v1 : vehiclesType)
+        {
+            System.out.println(v1);
+        }
+
+        ArrayList<Vehicle> allVehicles = vehicleManager.findAllVehicle();
+        System.out.println("\nFind all Vehicles");
+        for(Vehicle v1 : allVehicles)
         {
             System.out.println(v1);
         }

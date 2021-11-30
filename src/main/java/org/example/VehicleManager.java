@@ -39,7 +39,7 @@ public class VehicleManager {
                 int mileage = sc.nextInt();
                 double latitude = sc.nextDouble();  // Depot GPS location
                 double longitude = sc.nextDouble();
-                int loadSpace = sc.nextInt();
+                int loadSpace = sc.nextInt();  // change loadspace to double.  Read it inside the if below
 
                 if (type.equalsIgnoreCase("Van") ||
                         type.equalsIgnoreCase("Truck")) {
@@ -50,6 +50,7 @@ public class VehicleManager {
                             mileage, latitude, longitude,
                             loadSpace));
                 }
+//                else if ....CAR or 4*4 ...
             }
             sc.close();
 
@@ -83,4 +84,41 @@ public class VehicleManager {
         }
         return vehiclesMatching;
     }
+
+    public ArrayList<Vehicle> findAllVehicle()
+    {
+        for(Vehicle v : vehicleList)
+        {
+            return vehicleList;
+        }
+        return null;
+    }
+
+    public ArrayList<Vehicle> findVehicleByRegistration(String registration)
+    {
+        ArrayList<Vehicle> vehiclesRegistration = new ArrayList<>();
+        for(Vehicle v : vehicleList)
+        {
+            if(v.getRegistration().equalsIgnoreCase(registration))
+            {
+                vehiclesRegistration.add(v);
+            }
+        }
+        return vehiclesRegistration;
+    }
+
+    public ArrayList<Vehicle> findVehicleByType(String type)
+    {
+        ArrayList<Vehicle> vehiclesType = new ArrayList<>();
+        for(Vehicle v : vehicleList)
+        {
+            if(v.getType().equalsIgnoreCase(type))
+            {
+                vehiclesType.add(v);
+            }
+        }
+        return vehiclesType;
+    }
+
+
 }

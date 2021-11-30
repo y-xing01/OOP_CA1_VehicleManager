@@ -14,5 +14,15 @@ public class BookingManager
     }
 
     //TODO implement functionality as per specification
+//    public Booking tryBooking(String passengerId, String vehicleType,
+//                              int year, int month, int day, int hours, int minutes,
+//                              double startLatitude, double endLatitude,
+//                              double startLongitude, double endLongitude){
+//        if(passengerStore.findPassengerById(passengerId) != null)
+//        {
+//
+//        }
+//        return null;
+//    }
 
 }

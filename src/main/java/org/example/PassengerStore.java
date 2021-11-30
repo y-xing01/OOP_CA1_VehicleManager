@@ -1,5 +1,6 @@
 package org.example;
 
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,6 +54,23 @@ public class PassengerStore {
         } catch (IOException e) {
             System.out.println("Exception thrown. " + e);
         }
+    }
+
+    public void addPassenger(String name, String email, String phone, double latitude, double longitude) {
+        passengerList.add(new Passenger(name, email, phone, latitude, longitude));
+    }
+
+    public void addPassenger(int id, String name, String email, String phone, double latitude, double longitude) {
+        passengerList.add(new Passenger(id, name, email, phone, latitude, longitude));
+    }
+
+    public Passenger findPassengerByName(String name) {
+        for (Passenger p : passengerList) {
+            if (p.getName().equals(name)) {
+                return p;
+            }
+        }
+        return null;
     }
 
     // TODO - see functional spec for details of code to add
