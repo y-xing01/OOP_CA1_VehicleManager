@@ -39,10 +39,11 @@ public class VehicleManager {
                 int mileage = sc.nextInt();
                 double latitude = sc.nextDouble();  // Depot GPS location
                 double longitude = sc.nextDouble();
-                int loadSpace = sc.nextInt();  // change loadspace to double.  Read it inside the if below
 
-                if (type.equalsIgnoreCase("Van") ||
-                        type.equalsIgnoreCase("Truck")) {
+
+                if (type.equalsIgnoreCase("Van") || type.equalsIgnoreCase("Truck"))
+                {
+                    double loadSpace = sc.nextDouble();
                     // construct a Van object and add it to the passenger list
                     vehicleList.add(new Van(id, type, make, model, milesPerKwH,
                             registration, costPerMile,
@@ -50,13 +51,22 @@ public class VehicleManager {
                             mileage, latitude, longitude,
                             loadSpace));
                 }
-//                else if ....CAR or 4*4 ...
+                else if (type.equalsIgnoreCase("Car") || type.equalsIgnoreCase("4x4"))
+                {
+                    int seats = sc.nextInt();
+                    vehicleList.add(new Car(id, type, make, model, milesPerKwH,
+                            registration, costPerMile,
+                            year, month, day,
+                            mileage, latitude, longitude,
+                            seats));
+                }
             }
             sc.close();
 
         } catch (IOException e) {
             System.out.println("Exception thrown. " + e);
         }
+
     }
 
     //TODO add more functionality as per spec.
@@ -120,5 +130,13 @@ public class VehicleManager {
         return vehiclesType;
     }
 
-
+    public void getVehiclesbySeats(int seats) {
+        for (Vehicle v : vehicleList) {
+            if (v instanceof Car) {
+                if (((Car) v).getNumOfSeats() == seats) {
+                    System.out.println("Details of vehicles with " + seats + " seats:" + v);
+                }
+            }
+        }
+    }
 }

@@ -130,6 +130,21 @@ public abstract class Vehicle
         this.type = type;
     }
 
+    public boolean equals( Object otherObject ) {
+
+        if (otherObject == null) { return false; }
+
+        if (getClass() != otherObject.getClass()) { return false; }
+
+        Vehicle other = (Vehicle) otherObject;
+
+        return  id == other.id &&
+                type.equals(other.type) &&
+                make.equals(other.make) &&
+                model.equals(other.model) &&
+                registration == other.registration;
+    }
+
     @Override
     public String toString()
     {

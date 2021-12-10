@@ -35,7 +35,7 @@ public class IdGenerator {
     private String fileName;
 
     private IdGenerator(String fileName) {     // "private" prevents external construction
-    this.fileName = fileName;
+        this.fileName = fileName;
         // open file and read the last saved "nextId" value
         try {
             File file = new File(fileName);
@@ -87,4 +87,3 @@ public class IdGenerator {
     }
 
 }
-
