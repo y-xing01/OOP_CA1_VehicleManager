@@ -2,7 +2,9 @@ package org.example;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class VehicleManager {
@@ -27,7 +29,7 @@ public class VehicleManager {
 
             while (sc.hasNext()) {
                 int id = sc.nextInt();
-                String type = sc.next();  // vehicle type
+                Vehicle.Type type = Vehicle.Type.valueOf(sc.next());  // vehicle type
                 String make = sc.next();
                 String model = sc.next();
                 double milesPerKwH = sc.nextDouble();
@@ -41,7 +43,7 @@ public class VehicleManager {
                 double longitude = sc.nextDouble();
 
 
-                if (type.equalsIgnoreCase("Van") || type.equalsIgnoreCase("Truck"))
+                if (type == Vehicle.Type.Van || type == Vehicle.Type.Truck)
                 {
                     double loadSpace = sc.nextDouble();
                     // construct a Van object and add it to the passenger list
@@ -51,7 +53,7 @@ public class VehicleManager {
                             mileage, latitude, longitude,
                             loadSpace));
                 }
-                else if (type.equalsIgnoreCase("Car") || type.equalsIgnoreCase("4x4"))
+                else if (type == Vehicle.Type.Car || type == Vehicle.Type.FourByFour)
                 {
                     int seats = sc.nextInt();
                     vehicleList.add(new Car(id, type, make, model, milesPerKwH,
@@ -122,7 +124,7 @@ public class VehicleManager {
         ArrayList<Vehicle> vehiclesType = new ArrayList<>();
         for(Vehicle v : vehicleList)
         {
-            if(v.getType().equalsIgnoreCase(type))
+            if(v.getType().name().equalsIgnoreCase(type))
             {
                 vehiclesType.add(v);
             }
@@ -131,12 +133,20 @@ public class VehicleManager {
     }
 
     public void getVehiclesbySeats(int seats) {
-        for (Vehicle v : vehicleList) {
-            if (v instanceof Car) {
+        ArrayList<Car> tempList = new ArrayList<>();
+        for(Vehicle v : vehicleList){
+            if(v instanceof Car){
                 if (((Car) v).getNumOfSeats() == seats) {
-                    System.out.println("Details of vehicles with " + seats + " seats:" + v);
+                    tempList.add((Car) v);
                 }
             }
+        }
+        CarComparator comp = new CarComparator();
+        Collections.sort(tempList,comp);
+        System.out.println("Details of vehicles with " + seats + " seats: ");
+        for(Car c: tempList)
+        {
+            System.out.println(c.toString());
         }
     }
 }

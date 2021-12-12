@@ -14,7 +14,7 @@ public class AppTest
     @Test
     public void createVan()
     {
-        Van van = new Van("Truck","Nissan","Urvan",4,"181MN6538107",
+        Van van = new Van(Vehicle.Type.Truck,"Nissan","Urvan",4,"181MN6538107",
                 6.00,2021,05,24,126000,53.2543,-6.4444,240);
         assertEquals("Nissan", van.getMake());
         assertEquals("Urvan", van.getModel());

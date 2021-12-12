@@ -1,14 +1,16 @@
 package org.example;
 
 import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class PassengerStore {
-
+    private final String fileName = "passengers.txt";
     private final ArrayList<Passenger> passengerList;
 
     public PassengerStore(String fileName) {
@@ -56,32 +58,52 @@ public class PassengerStore {
         }
     }
 
-//BOOKING .
-//find by id
-//is passenger store find passenger by id  (passengerStore.findPassengerById(passengerId) != null)
-//    public addBooking(String passengerId, String VehicleId, ...)
-//    {
-//        if(passengerStore.findPassengerById(passengerId != null))
-//        {
-//            //checking valid passenger Id
-//        }
-//        //check valid vehicle Id
-//        //convert year, month, week, day, hour, minute, second into local date time
-//        //create booking object
-//        //bookingList.add(bookingcreated)
-//    }
-
     public Passenger addPassenger(String name, String email, String phone, double latitude, double longitude) {
         Passenger newP = new Passenger(name, email, phone, latitude, longitude);
-        for (Passenger p : passengerList) {
-            if (p.equals(newP)) {
-                System.out.println("Same passenger input");
-                return null;
+        if(passengerList.contains(newP)) {
+            System.out.println("Passenger already exist.");
+            return null;
+        }
+        else{
+            for (Passenger p : passengerList) {
+                if (p.getEmail().equals(newP.getEmail())) {
+                    System.out.println("Email is used.");
+                    return null;
+                }
             }
         }
         passengerList.add(newP);
         return newP;
+    }
 
+    public void savePassengersToFile() {
+        BufferedWriter bw = null;
+        try {
+            File file = new File(fileName);
+
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file, false);
+            bw = new BufferedWriter(fw);
+
+            for (Passenger p : passengerList) {
+                bw.write(p.getId() + "," + p.getName() + "," + p.getEmail() + "," + p.getPhone()
+                        + "," + p.getLocation() + "\n");
+            }
+
+            System.out.println("File written Successfully");
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (bw != null)
+                    bw.close();
+            } catch (Exception ex) {
+                System.out.println("Error in closing the BufferedWriter" + ex);
+            }
+        }
     }
 
     public Passenger findPassengerByName(String name) {
@@ -103,6 +125,38 @@ public class PassengerStore {
         return null;
     }
 
-    // TODO - see functional spec for details of code to add
+    public Passenger getPassengerByName(String name) {
+        for(Passenger p : passengerList){
+            if(name.equals(p.getName()))
+                return p;
+        }
+        return null;
+    }
 
+    public boolean deletePassengerByID(int id) {
+        for (Passenger p : passengerList) {
+            if(id == p.getId())
+                this.passengerList.remove(p.getId());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deletePassengerByName(String name) {
+        for (Passenger p : passengerList) {
+            if(name == p.getName())
+                this.passengerList.remove(p.getName());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean checkDuplicatePassenger(Passenger p){
+        for(Passenger ps : passengerList){
+            if(ps.getName() == p.getName() && ps.getEmail() == p.getEmail()){
+                return false;
+            }
+        }
+        return true;
+    }
 } // end class

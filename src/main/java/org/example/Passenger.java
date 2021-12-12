@@ -103,4 +103,15 @@ public class Passenger {
     }
 
 
+    public int compareTo(Passenger o) {
+        if(this.getId() > o.getId()){
+            return -1;
+        } else if (this.getId() < o.getId()) {
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+
+
 }

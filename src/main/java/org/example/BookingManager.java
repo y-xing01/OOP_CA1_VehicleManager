@@ -1,23 +1,20 @@
 package org.example;
 
-import javax.xml.stream.Location;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.LocalDateTime;;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.GregorianCalendar;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class BookingManager {
     private final String fileName = "bookings.txt";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private final ArrayList<Booking> bookingList;
+    private final ArrayList<Passenger> passengerList = new ArrayList<>();
 
     // Constructor
     public BookingManager() {
@@ -80,8 +77,8 @@ public class BookingManager {
             }
 
             System.out.println("File written Successfully");
-        } catch (IOException ioe) {
-            ioe.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             try {
                 if (bw != null)
@@ -92,7 +89,7 @@ public class BookingManager {
         }
     }
 
-    public Booking findBookingById(int id) {
+    public Booking findBookingByID(int id) {
         for (Booking b : bookingList) {
             if (id == b.getBookingId()) {
                 return b;
@@ -101,19 +98,80 @@ public class BookingManager {
         return null;
     }
 
-    //TODO implement functionality as per specification
+    public double calculateCost(Vehicle.Type type, double distance) {
+        double total = 0;
+        if(type == Vehicle.Type.Car) {
+            total = distance*2.00;
+        }
+        else if(type == Vehicle.Type.FourByFour){
+            total = distance*4.00;
+        }
+        else if(type == Vehicle.Type.Van) {
+            total = distance*6.00;
+        }
+        else if(type == Vehicle.Type.Truck){
+            total = distance*10.00;
+        }
+        else{
+            System.out.println("Invalid type of Vehicle");
+            total = 0;
+        }
+        return total;
+    }
+
     public void addBooking(int passengerId, int vehicleId,
                            int year, int month, int day, int hours, int minutes,
                            double startLatitude, double endLatitude,
-                           double startLongitude, double endLongitude) {
-        String isoDateString = year + "-" + month + "-" + day + " " + hours + ":" + minutes;
+                           double startLongitude, double endLongitude,
+                           Vehicle.Type type, int mileage) {
+        String m;
+        if(month > 0 && month < 10)
+        {
+            m = String.valueOf(month);
+            m="0"+m;
+        }
+        else{
+            m = String.valueOf(month);
+        }
+
+        String d;
+        if(day > 0 && day < 10)
+        {
+            d = String.valueOf(day);
+            d ="0"+d;
+        }
+        else{
+            d = String.valueOf(day);
+        }
+
+        String h;
+        if(hours > 0 && hours < 10)
+        {
+            h = String.valueOf(hours);
+            h ="0"+h;
+        }
+        else{
+            h = String.valueOf(hours);
+        }
+
+        String min;
+        if(minutes > 0 && minutes < 10)
+        {
+            min = String.valueOf(minutes);
+            min ="0"+min;
+        }
+        else{
+            min = String.valueOf(minutes);
+        }
+
+        String isoDateString = year + "-" + m + "-" + d + " " + h + ":" + min;
         LocalDateTime ldt1 = LocalDateTime.parse(isoDateString, formatter);
         LocationGPS lgstart = new LocationGPS(startLatitude, startLongitude);
         LocationGPS lgend = new LocationGPS(endLatitude, endLongitude);
 
         if (checkAvailability(ldt1, vehicleId) != false) {
             // TODO: Cost
-            bookingList.add(new Booking(passengerId, vehicleId, ldt1, lgstart, lgend, 0));
+            bookingList.add(new Booking(passengerId, vehicleId, ldt1, lgstart, lgend, calculateCost(type,mileage)));
             System.out.println("Booking success.");
         } else {
             System.out.println("Booking Failed , vehicle have been booked!");
@@ -129,6 +187,70 @@ public class BookingManager {
             }
         }
         return true;
+    }
+
+    public void displayFutureBookings(){
+        ArrayList<Booking> tempList = new ArrayList<>();
+        LocalDateTime now = LocalDateTime.now();
+        for(Booking b: bookingList){
+            if(b.getBookingDateTime().isAfter(now)){
+                tempList.add(b);
+            }
+        }
+        BookingComparator comp = new BookingComparator();
+        Collections.sort(tempList,comp);
+        for(Booking b: tempList)
+        {
+            System.out.println(b.toString());
+        }
+    }
+
+    public void displayBookingByID(int id){
+        for(Booking b: bookingList){
+            if(b.getBookingId() == id){
+                System.out.println(b.toString());
+            }
+        }
+    }
+
+    public void displayBookingByPassengerID(int passengerId){
+        ArrayList<Booking> tempList = new ArrayList<>();
+        for(Booking b: bookingList){
+            if(b.getPassengerId() == passengerId){
+                tempList.add(b);
+            }
+        }
+        BookingComparator comp = new BookingComparator();
+        Collections.sort(tempList,comp);
+        for(Booking b: tempList)
+        {
+            System.out.println(b.toString());
+        }
+    }
+
+    public double averageLength() {
+        double total = 0;
+        for(Booking b : bookingList) {
+            total += b.getCost();
+        }
+        return total/bookingList.size();
+    }
+
+    public boolean deleteBookingByID(int id) {
+        for (Booking b : bookingList) {
+            if(id == b.getBookingId())
+            this.bookingList.remove(b.getBookingId());
+            return true;
+        }
+        return false;
+    }
+
+    public boolean deleteBookingByName (String name) {
+        for (Passenger p : passengerList) {
+            this.passengerList.removeIf(pName -> pName.getName() == name);
+            return true;
+        }
+        return false;
     }
 
 

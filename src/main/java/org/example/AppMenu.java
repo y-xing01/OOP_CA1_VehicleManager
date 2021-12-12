@@ -84,6 +84,7 @@ public class AppMenu {
                         break;
                     case EXIT:
                         System.out.println("Exit Menu option chosen");
+                        bookingManager.saveBookingsToFile();
                         break;
                     default:
                         System.out.print("Invalid option - please enter number in range");
@@ -210,10 +211,13 @@ public class AppMenu {
                         Vehicle v = vehicleManager.findVehicleById(id);
                         System.out.println("\nVehicle details from findVechicleById : ");
 
-                        if(v != null)
+                        if (v != null){
                             System.out.println(v);
-                        else
+                        }
+                        else{
                             System.out.println("No vehicle with that id found");
+                        }
+                        kb.nextLine();
                         break;
                     case FIND_BY_MAKE:
                         System.out.print("Enter Vehicle Make : ");
@@ -229,7 +233,7 @@ public class AppMenu {
                         String reg = kb.nextLine();
                         ArrayList<Vehicle> vehicleRegistration = vehicleManager.findVehicleByRegistration(reg);
 
-                        if(vehicleRegistration != null)
+                        if(vehicleRegistration != null && vehicleRegistration.size() != 0)
                             System.out.println(vehicleRegistration);
                         else
                             System.out.println("No vehicle with that registration found");
@@ -244,7 +248,7 @@ public class AppMenu {
                             System.out.println("No vehicle with that type found");
                         break;
                     case FIND_BY_SEAT:
-                        System.out.print("Enter Vehicle Seat : ");
+                        System.out.print("Enter Vehicle Seat Number : ");
                         int seat = kb.nextInt();
                         if(seat != 0)
                             vehicleManager.getVehiclesbySeats(seat);
@@ -274,10 +278,12 @@ public class AppMenu {
                 + "Enter Option [1,5]";
 
         final int SHOW_ALL = 1;
-        final int ADD_A_BOOKING = 2;
-        final int EDIT_BOOKING_DETAILS = 3;
-        final int DELETE_BOOKING = 4;
-        final int EXIT = 5;
+        final int SHOW_ALL_FUTURE = 2;
+        final int SHOW_ALL_BY_PASSENGERNAME = 3;
+        final int ADD_A_BOOKING = 4;
+        final int EDIT_BOOKING_DETAILS = 5;
+        final int DELETE_BOOKING = 6;
+        final int EXIT = 7;
 
         Scanner keyboard = new Scanner(System.in);
         int option = 0;
@@ -290,6 +296,18 @@ public class AppMenu {
                     case SHOW_ALL:
                         System.out.println("Display ALL Bookings");
                         bookingManager.displayAllBookings();
+                        break;
+                    case SHOW_ALL_FUTURE:
+                        System.out.println("Display ALL Future Bookings");
+                        bookingManager.displayFutureBookings();
+                        break;
+                    case SHOW_ALL_BY_PASSENGERNAME:
+                        System.out.println("Display ALL Bookings by Passenger Name");
+                        Passenger p = passengerStore.getPassengerByName("Joseph Bailey");
+                        //input
+                        if(p != null) {
+                            bookingManager.displayBookingByPassengerID(p.getId());
+                        }
                         break;
                     case ADD_A_BOOKING:
                         int passengerId;
@@ -322,8 +340,15 @@ public class AppMenu {
                         double elatitude = keyboard.nextDouble();
                         System.out.println("Enter end longitude");
                         double elongitude = keyboard.nextDouble();
-
-                        bookingManager.addBooking(passengerId, vehicleId, year, month, day, hour, minutes, slatitude, elatitude, slongitude, elongitude);
+                        Vehicle v = vehicleManager.findVehicleById(vehicleId);
+                        if (v != null) {
+                            Vehicle.Type type = v.getType();
+                            int mileage = v.getMileage();
+                            bookingManager.addBooking(passengerId, vehicleId, year, month, day, hour, minutes, slatitude, elatitude, slongitude, elongitude, type, mileage);
+                        }
+                        else{
+                            System.out.println("Vehicle not Found");
+                        }
                         break;
                     case EDIT_BOOKING_DETAILS:
 

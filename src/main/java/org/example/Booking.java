@@ -90,7 +90,6 @@ class Booking {
         this.cost = cost;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -115,5 +114,15 @@ class Booking {
                 ", endLocation=" + endLocation +
                 ", cost=" + cost +
                 '}';
+    }
+
+    public int compareTo(Booking o) {
+        if(this.getBookingId() > o.getBookingId()){
+            return -1;
+        } else if (this.getBookingId() < o.getBookingId()) {
+            return 1;
+        }else{
+            return 0;
+        }
     }
 }

@@ -6,7 +6,7 @@ public class Van extends Vehicle
 {
     private double loadSpace;   // measured in litres.  For Vans and Trucks
 
-    public Van(String type, String make, String model, double milesPerKwH,
+    public Van(Type type, String make, String model, double milesPerKwH,
                String registration, double costPerMile,
                int year, int month, int day,
                int mileage, double latitude, double longitude,
@@ -24,7 +24,7 @@ public class Van extends Vehicle
     // Constructor version to be used to recreate a Van that was read from file.
     // It will have already been allocated an id.
     //
-    public Van(int id, String type, String make, String model, double milesPerKwH,
+    public Van(int id, Type type, String make, String model, double milesPerKwH,
                String registration, double costPerMile,
                int year, int month, int day,
                int mileage, double latitude, double longitude,

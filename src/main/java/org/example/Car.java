@@ -6,7 +6,7 @@ public class Car extends Vehicle
 {
     private double numOfSeats;
 
-    public Car(String type, String make, String model, double milesPerKwH,
+    public Car(Type type, String make, String model, double milesPerKwH,
                String registration, double costPerMile,
                int year, int month, int day,
                int mileage, double latitude, double longitude,
@@ -24,7 +24,7 @@ public class Car extends Vehicle
     // Constructor version to be used to recreate a Van that was read from file.
     // It will have already been allocated an id.
     //
-    public Car(int id, String type, String make, String model, double milesPerKwH,
+    public Car(int id, Type type, String make, String model, double milesPerKwH,
                String registration, double costPerMile,
                int year, int month, int day,
                int mileage, double latitude, double longitude,
@@ -48,7 +48,7 @@ public class Car extends Vehicle
 
     @Override
     public String toString() {
-        return "Van{" +
+        return "Car{" +
                 "numOfSeats=" + numOfSeats +
                 "} " + super.toString();
     }
