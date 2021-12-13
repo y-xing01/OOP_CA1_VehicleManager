@@ -1,8 +1,9 @@
 package org.example;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 
-public abstract class Vehicle {
+public abstract class Vehicle implements Comparable<Vehicle> {
     private IdGenerator idGenerator = IdGenerator.getInstance("next-id-store.txt");  // get access to the id Generator
 
     private int id;
@@ -164,7 +165,7 @@ public abstract class Vehicle {
                 + depotGPSLocation + '}';
     }
 
-
+    @Override
     public int compareTo(Vehicle o) {
         if (this.getId() > o.getId()) {
             return -1;

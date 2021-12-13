@@ -16,6 +16,7 @@ public class VehicleManager {
     }
 
     public void displayAllVehicles() {
+        Collections.sort(this.vehicleList);
         for (Vehicle v : vehicleList)
             System.out.println(v.toString());
     }
@@ -86,15 +87,15 @@ public class VehicleManager {
 
     public ArrayList<Vehicle> findVehicleByMake(String make)
     {
-        ArrayList<Vehicle> vehiclesMatching = new ArrayList<>();
+        ArrayList<Vehicle> vehiclesMaking = new ArrayList<>();
         for(Vehicle v : vehicleList)
         {
             if(v.getMake().equalsIgnoreCase(make))
             {
-                vehiclesMatching.add(v);
+                vehiclesMaking.add(v);
             }
         }
-        return vehiclesMatching;
+        return vehiclesMaking;
     }
 
     public ArrayList<Vehicle> findAllVehicle()
@@ -144,9 +145,15 @@ public class VehicleManager {
         CarComparator comp = new CarComparator();
         Collections.sort(tempList,comp);
         System.out.println("Details of vehicles with " + seats + " seats: ");
-        for(Car c: tempList)
+        if(tempList.size() != 0)
         {
-            System.out.println(c.toString());
+            for(Car c: tempList)
+            {
+                System.out.println(c.toString());
+            }
+        }
+        else{
+            System.out.println("No Vehicle with " + seats + " seats found.");
         }
     }
 }

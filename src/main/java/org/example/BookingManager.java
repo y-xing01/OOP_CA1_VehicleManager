@@ -8,13 +8,13 @@ import java.time.LocalDateTime;;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class BookingManager {
     private final String fileName = "bookings.txt";
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
     private final ArrayList<Booking> bookingList;
-    private final ArrayList<Passenger> passengerList = new ArrayList<>();
 
     // Constructor
     public BookingManager() {
@@ -23,6 +23,7 @@ public class BookingManager {
     }
 
     public void displayAllBookings() {
+        Collections.sort(this.bookingList);
         for (Booking b : bookingList)
             System.out.println(b.toString());
     }
@@ -76,7 +77,7 @@ public class BookingManager {
                         + "," + b.getCost() + "\n");
             }
 
-            System.out.println("File written Successfully");
+            System.out.println("Booking File updated");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -87,15 +88,6 @@ public class BookingManager {
                 System.out.println("Error in closing the BufferedWriter" + ex);
             }
         }
-    }
-
-    public Booking findBookingByID(int id) {
-        for (Booking b : bookingList) {
-            if (id == b.getBookingId()) {
-                return b;
-            }
-        }
-        return null;
     }
 
     public double calculateCost(Vehicle.Type type, double distance) {
@@ -164,14 +156,13 @@ public class BookingManager {
             min = String.valueOf(minutes);
         }
 
-        String isoDateString = year + "-" + m + "-" + d + " " + h + ":" + min;
-        LocalDateTime ldt1 = LocalDateTime.parse(isoDateString, formatter);
+        String toDateString = year + "-" + m + "-" + d + " " + h + ":" + min;
+        LocalDateTime lDateTime = LocalDateTime.parse(toDateString, formatter);
         LocationGPS lgstart = new LocationGPS(startLatitude, startLongitude);
         LocationGPS lgend = new LocationGPS(endLatitude, endLongitude);
 
-        if (checkAvailability(ldt1, vehicleId) != false) {
-            // TODO: Cost
-            bookingList.add(new Booking(passengerId, vehicleId, ldt1, lgstart, lgend, calculateCost(type,mileage)));
+        if (checkAvailability(lDateTime, vehicleId) != false) {
+            bookingList.add(new Booking(passengerId, vehicleId, lDateTime, lgstart, lgend, calculateCost(type,mileage)));
             System.out.println("Booking success.");
         } else {
             System.out.println("Booking Failed , vehicle have been booked!");
@@ -205,11 +196,152 @@ public class BookingManager {
         }
     }
 
-    public void displayBookingByID(int id){
-        for(Booking b: bookingList){
-            if(b.getBookingId() == id){
-                System.out.println(b.toString());
+    public void editBooking(int id) throws IOException{
+        Scanner kb = new Scanner(System.in);
+        Booking b = null;
+        for(Booking b1 : bookingList){
+            if(b1.getBookingId() == id){
+                b = b1;
+                final String EDIT_MENU = "\nEDIT BOOKING MENU\n"
+                        + "1. EDIT PASSENGER ID\n"
+                        + "2. EDIT VEHICLE ID\n"
+                        + "3. EDIT DATE\n"
+                        + "4. EDIT COORDINATE\n"
+                        + "5. EXIT\n"
+                        + "Enter Option [1-5]";
+
+                final int EDIT_PASSENGER_ID = 1;
+                final int EDIT_VEHICLE_ID = 2;
+                final int EDIT_DATE = 3;
+                final int EDIT_COORDINATE = 4;
+                final int EXIT = 5;
+
+                int option = 0;
+                do{
+                    System.out.println("\n" + EDIT_MENU);
+                    try{
+                        String usersInput = kb.nextLine();
+                        option = Integer.parseInt(usersInput);
+                        switch (option){
+                            case EDIT_PASSENGER_ID:
+                                System.out.println("Enter new Passenger ID");
+                                int newPassengerId = kb.nextInt();
+                                if(b1.getBookingId() == newPassengerId)
+                                    b1.setPassengerId(newPassengerId);
+                                else
+                                    System.out.println("Passenger ID not found");
+                                kb.nextLine();
+                                break;
+                            case EDIT_VEHICLE_ID:
+                                System.out.println("Enter new Vehicle ID");
+                                int newVehicleId = kb.nextInt();
+                                b1.setVehicleId(newVehicleId);
+                                kb.nextLine();
+                                break;
+                            case EDIT_DATE:
+                                System.out.println("Enter new Year");
+                                int year = kb.nextInt();
+                                System.out.println("Enter new Month");
+                                int month = kb.nextInt();
+                                System.out.println("Enter new day");
+                                int day = kb.nextInt();
+                                System.out.println("Enter new Hours (0-23)");
+                                int hour = kb.nextInt();
+                                System.out.println("Enter new Minutes (0-59)");
+                                int minutes = kb.nextInt();
+                                String m;
+                                if(month > 0 && month < 10)
+                                {
+                                    m = String.valueOf(month);
+                                    m="0"+m;
+                                }
+                                else{
+                                    m = String.valueOf(month);
+                                }
+
+                                String d;
+                                if(day > 0 && day < 10)
+                                {
+                                    d = String.valueOf(day);
+                                    d ="0"+d;
+                                }
+                                else{
+                                    d = String.valueOf(day);
+                                }
+
+                                String h;
+                                if(hour > 0 && hour < 10)
+                                {
+                                    h = String.valueOf(hour);
+                                    h ="0"+h;
+                                }
+                                else{
+                                    h = String.valueOf(hour);
+                                }
+
+                                String min;
+                                if(minutes > 0 && minutes < 10)
+                                {
+                                    min = String.valueOf(minutes);
+                                    min ="0"+min;
+                                }
+                                else{
+                                    min = String.valueOf(minutes);
+                                }
+                                String isoDateString = year + "-" + m + "-" + d + " " + h + ":" + min;
+                                LocalDateTime ldt1 = LocalDateTime.parse(isoDateString, formatter);
+                                b1.setBookingDateTime(ldt1);
+                                kb.nextLine();
+                                break;
+                            case EDIT_COORDINATE:
+                                System.out.println("Enter new start Latitude");
+                                double newStartLatitude = kb.nextDouble();
+                                System.out.println("Enter new start Longitude");
+                                double newStartLongitude = kb.nextDouble();
+                                System.out.println("Enter new end Latitude");
+                                double newEndLatitude = kb.nextDouble();
+                                System.out.println("Enter new end Longitude");
+                                double newEndLongitude = kb.nextDouble();
+                                LocationGPS lgstart = new LocationGPS(newStartLatitude, newStartLongitude);
+                                LocationGPS lgend = new LocationGPS(newEndLatitude, newEndLongitude);
+                                b1.setStartLocation(lgstart);
+                                b1.setEndLocation(lgend);
+                                kb.nextLine();
+                                break;
+                            case EXIT:
+                                System.out.println("Exit Menu option chosen");
+                                break;
+                            default:
+                                System.out.print("Invalid option - please enter number in range");
+                                break;
+                        }
+                    } catch(InputMismatchException | NumberFormatException e) {
+                        System.out.println("Invalid option - please enter number in range");
+                    }
+                } while (option != EXIT);
             }
+        }
+        if(b != null){
+            System.out.println(b);
+        }
+        else{
+            System.out.println("Booking ID is not found");
+        }
+    }
+
+    public void displayBookingByID(int id){
+        Booking b = null;
+        for(Booking b1: bookingList){
+            if(b1.getBookingId() == id){
+                b = b1;
+                break;
+            }
+        }
+        if(b != null){
+            System.out.println(b);
+        }
+        else {
+            System.out.println("Booking with this ID is not found");
         }
     }
 
@@ -222,10 +354,17 @@ public class BookingManager {
         }
         BookingComparator comp = new BookingComparator();
         Collections.sort(tempList,comp);
-        for(Booking b: tempList)
+        if(tempList.size() != 0)
         {
-            System.out.println(b.toString());
+            for(Booking b: tempList)
+            {
+                System.out.println(b.toString());
+            }
         }
+        else{
+            System.out.println("No Booking made by this passenger");
+        }
+
     }
 
     public double averageLength() {
@@ -236,22 +375,12 @@ public class BookingManager {
         return total/bookingList.size();
     }
 
-    public boolean deleteBookingByID(int id) {
+    public boolean deleteBookingByID (int id) {
+
         for (Booking b : bookingList) {
-            if(id == b.getBookingId())
-            this.bookingList.remove(b.getBookingId());
+            this.bookingList.removeIf(bookingID -> bookingID.getBookingId() == id);
             return true;
         }
         return false;
     }
-
-    public boolean deleteBookingByName (String name) {
-        for (Passenger p : passengerList) {
-            this.passengerList.removeIf(pName -> pName.getName() == name);
-            return true;
-        }
-        return false;
-    }
-
-
 }

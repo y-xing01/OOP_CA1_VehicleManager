@@ -1,10 +1,11 @@
 package org.example;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 
-public class Passenger {
+public class Passenger implements Comparable<Passenger> {
     private int id;
     private String name;
     private String email;

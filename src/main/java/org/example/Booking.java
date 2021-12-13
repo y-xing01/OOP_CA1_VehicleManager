@@ -1,9 +1,10 @@
 package org.example;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.Objects;
 
-class Booking {
+public class Booking implements Comparable<Booking> {
     private int bookingId;
     private int passengerId;
     private int vehicleId;

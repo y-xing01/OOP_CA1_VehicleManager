@@ -5,11 +5,11 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.List;
-import java.util.Scanner;
 
-public class PassengerStore {
+public class PassengerStore{
     private final String fileName = "passengers.txt";
     private final ArrayList<Passenger> passengerList;
 
@@ -23,6 +23,7 @@ public class PassengerStore {
     }
 
     public void displayAllPassengers() {
+        Collections.sort(this.passengerList);
         for (Passenger p : this.passengerList) {
             System.out.println(p.toString());
         }
@@ -66,14 +67,80 @@ public class PassengerStore {
         }
         else{
             for (Passenger p : passengerList) {
-                if (p.getEmail().equals(newP.getEmail())) {
-                    System.out.println("Email is used.");
+                if (checkDuplicatePassenger(p)) {
+                    System.out.println("Name and Email is used.");
                     return null;
                 }
             }
         }
         passengerList.add(newP);
         return newP;
+    }
+
+    public void editPassenger(int id) throws IOException{
+        Scanner kb = new Scanner(System.in);
+        Passenger p = null;
+        for(Passenger p1 : passengerList){
+            if(p1.getId() == id){
+                p = p1;
+                final String EDIT_MENU = "\nEDIT PASSENGER MENU\n"
+                        + "1. EDIT PASSENGER NAME\n"
+                        + "2. EDIT PASSENGER LOCATION\n"
+                        + "3. EDIT PASSENGER EMAIL\n"
+                        + "4. EDIT PASSENGER PHONE\n"
+                        + "5. EXIT\n"
+                        + "Enter Option [1-5]";
+
+                final int EDIT_PASSENGER_NAME = 1;
+                final int EDIT_PASSENGER_LOCATION = 2;
+                final int EDIT_PASSENGER_EMAIL = 3;
+                final int EDIT_PASSENGER_PHONE = 4;
+                final int EXIT = 5;
+
+                int option = 0;
+                do{
+                    System.out.println("\n" + EDIT_MENU);
+                    try{
+                        String usersInput = kb.nextLine();
+                        option = Integer.parseInt(usersInput);
+                        switch (option){
+                            case EDIT_PASSENGER_NAME:
+                            System.out.println("Enter new Passenger Name");
+                                String newPassengerName = kb.nextLine();
+                                p1.setName(newPassengerName);
+                                break;
+                            case EDIT_PASSENGER_LOCATION:
+                                System.out.println("Enter new Passenger Latitude");
+                                double newLatitude = kb.nextDouble();
+                                System.out.println("Enter new Passenger Longitude");
+                                double newLongitude = kb.nextDouble();
+                                p1.setLocation(newLatitude, newLongitude);
+                                kb.nextLine();
+                                break;
+                            case EDIT_PASSENGER_EMAIL:
+                                System.out.println("Enter new Passenger Email");
+                                String newEmail = kb.nextLine();
+                                p1.setEmail(newEmail);
+                                break;
+                            case EDIT_PASSENGER_PHONE:
+                                System.out.println("Enter new Passenger Phone");
+                                String newPhone = kb.nextLine();
+                                p1.setPhone(newPhone);
+                                break;
+                        }
+                    } catch(InputMismatchException | NumberFormatException e) {
+                        System.out.println("Invalid option - please enter number in range");
+                    }
+                } while (option != EXIT);
+
+            }
+        }
+        if(p != null){
+            System.out.println(p);
+        }
+        else{
+            System.out.println("Passenger ID is not found");
+        }
     }
 
     public void savePassengersToFile() {
@@ -90,10 +157,10 @@ public class PassengerStore {
 
             for (Passenger p : passengerList) {
                 bw.write(p.getId() + "," + p.getName() + "," + p.getEmail() + "," + p.getPhone()
-                        + "," + p.getLocation() + "\n");
+                        + "," + p.getLocation().getLatitude() + "," + p.getLocation().getLongitude() + "\n");
             }
 
-            System.out.println("File written Successfully");
+            System.out.println("Passenger File updated");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -106,17 +173,6 @@ public class PassengerStore {
         }
     }
 
-    public Passenger findPassengerByName(String name) {
-        for (Passenger p : passengerList) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                System.out.println("Passenger with name " + name + " is found.");
-            } else {
-                System.out.println("Passenger name not found");
-            }
-        }
-        return null;
-    }
-
     public Passenger getPassengerById(int id) {
         for(Passenger p : passengerList){
             if(id == p.getId())
@@ -127,25 +183,23 @@ public class PassengerStore {
 
     public Passenger getPassengerByName(String name) {
         for(Passenger p : passengerList){
-            if(name.equals(p.getName()))
+            if(name.equalsIgnoreCase(p.getName()))
                 return p;
         }
         return null;
     }
 
-    public boolean deletePassengerByID(int id) {
+    public boolean deletePassengerByID (int id) {
         for (Passenger p : passengerList) {
-            if(id == p.getId())
-                this.passengerList.remove(p.getId());
+            this.passengerList.removeIf(passengerId -> passengerId.getId() == id);
             return true;
         }
         return false;
     }
 
-    public boolean deletePassengerByName(String name) {
+    public boolean deletePassengerByName (String name) {
         for (Passenger p : passengerList) {
-            if(name == p.getName())
-                this.passengerList.remove(p.getName());
+            this.passengerList.removeIf(pName -> pName.getName() == name);
             return true;
         }
         return false;

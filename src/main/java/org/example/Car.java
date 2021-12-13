@@ -1,9 +1,10 @@
 package org.example;
 
+import java.util.Comparator;
+
 // Car class to represent 4x4 and Cars
 //
-public class Car extends Vehicle
-{
+public class Car extends Vehicle {
     private double numOfSeats;
 
     public Car(Type type, String make, String model, double milesPerKwH,
